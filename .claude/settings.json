@@ -1,0 +1,6 @@
+{
+  "statusLine": {
+    "type": "command",
+    "command": "node .ai/hooks/ai1st-statusline.js"
+  }
+}

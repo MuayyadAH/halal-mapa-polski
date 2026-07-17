@@ -1,0 +1,48 @@
+{
+  "$schema": "https://raw.githubusercontent.com/anthropics/claude-code/main/schemas/hooks.schema.json",
+  "description": "Claude Code hooks for legacy analysis validation. Copy to project .claude/hooks.json when using /ai1st-arch-legacy-analysis-lite.",
+  "hooks": [
+    {
+      "description": "BLOCK numbered file names (01-*, 02-*, etc.) - enforce {DOCTYPE}-{module}.md format",
+      "event": "PreToolUse",
+      "matcher": {
+        "tool": ["Write"],
+        "pathPattern": "**/arch-as-is-lite/[0-9][0-9]-*.md|**/arch-to-be-lite/[0-9][0-9]-*.md"
+      },
+      "type": "command",
+      "command": "echo 'BLOCKED: Invalid file naming. Use {DOCTYPE}-{module}.md format (e.g., UC-claims.md, BRS-payments.md). NO numbered prefixes like 01-OVERVIEW.md' && exit 1"
+    },
+    {
+      "description": "READ-ONLY policy: Block writes to source code files during legacy analysis",
+      "event": "PreToolUse",
+      "matcher": {
+        "tool": ["Write", "Edit"],
+        "pathPattern": "**/*.java|**/*.cs|**/*.sql|**/*.csproj|**/*.xml"
+      },
+      "type": "command",
+      "command": "echo 'BLOCKED: READ-ONLY policy violation - Legacy analysis cannot modify source code' && exit 1"
+    },
+    {
+      "description": "Validate DEPENDENCIES.md structure after creation",
+      "event": "PostToolUse",
+      "matcher": {
+        "tool": ["Write"],
+        "pathPattern": "**/DEPENDENCIES.md"
+      },
+      "type": "command",
+      "command": "node .ai/scripts/validate-dependencies-md.js"
+    },
+    {
+      "description": "Pre-gate completion verification prompt",
+      "event": "Stop",
+      "type": "prompt",
+      "prompt": "Before completing: Verify all extractions have file:line references. List any items missing code citations. Check for TBD/TODO placeholders."
+    },
+    {
+      "description": "Load validation rules at session start",
+      "event": "SessionStart",
+      "type": "prompt",
+      "prompt": "Legacy Analysis Session: READ-ONLY mode active. All extractions require file:line citations. Use QC-01 to QC-05 quality checks before Gate 1, QC-06 and QC-07 post-generation. FILE NAMING: Use {DOCTYPE}-{module}.md format (UC-claims.md, BRS-payments.md). NO numbered prefixes (01-*, 02-*)."
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+# Flutter / Dart
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+build/
+coverage/
+flutter_export_environment.sh
+
+# IDE
+*.iml
+*.ipr
+*.iws
+.idea/
+.vscode/
+
+# Claude
+specs/design/
+
+# iOS
+ios/Flutter/.last_build_id
+ios/Pods/
+ios/.symlinks/
+ios/Flutter/flutter_export_environment.sh
+ios/Runner.xcworkspace/xcuserdata/
+ios/Runner.xcodeproj/xcuserdata/
+ios/Runner.xcodeproj/project.xcworkspace/xcuserdata/
+
+# Android
+android/.gradle/
+android/captures/
+android/local.properties
+android/key.properties
+android/app/release/
+
+# Generated localizations
+lib/l10n/generated/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Local secrets passed via --dart-define-from-file (e.g. MAP_TILES_KEY). Never commit.
+dart_define.local.json
+
+# OS
+.DS_Store
+Thumbs.db

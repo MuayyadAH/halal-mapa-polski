@@ -1,0 +1,255 @@
+{
+  "@@locale": "pl",
+
+  "appTitle": "Halal Map Polskie",
+  "@appTitle": {
+    "description": "Application title"
+  },
+
+  "tabHome": "Strona",
+  "@tabHome": {},
+  "tabMap": "Mapa",
+  "@tabMap": {},
+  "tabAdd": "Dodaj",
+  "@tabAdd": {},
+  "tabSaved": "Zapisane",
+  "@tabSaved": {},
+  "tabProfile": "Profil",
+  "@tabProfile": {},
+
+  "comingSoon": "Wkrótce",
+  "@comingSoon": {},
+
+  "splashLoading": "Ładowanie",
+  "@splashLoading": {
+    "description": "Loader label below the splash animation"
+  },
+
+  "onboardingSkip": "Pomiń",
+  "@onboardingSkip": {
+    "description": "Top-left skip link on Onboard 1 and 2"
+  },
+  "onboardingNext": "Dalej",
+  "@onboardingNext": {
+    "description": "Bottom CTA on Onboard 1 and 2"
+  },
+  "onboardingContinue": "Kontynuuj",
+  "@onboardingContinue": {
+    "description": "Primary CTA on Onboard 3"
+  },
+  "onboardingBrowseAsGuest": "Przeglądaj jako gość",
+  "@onboardingBrowseAsGuest": {
+    "description": "Secondary CTA on Onboard 3"
+  },
+
+  "onboardingFindTitle": "Znajdź miejsca halal w całej Polsce",
+  "@onboardingFindTitle": {
+    "description": "Onboard 1 — Find headline"
+  },
+  "onboardingFindSubtitle": "Restauracje, meczety i sklepy halal w pobliżu — sprawdzone przez społeczność",
+  "@onboardingFindSubtitle": {},
+
+  "onboardingTrustTitle": "Zaufaj społeczności",
+  "@onboardingTrustTitle": {
+    "description": "Onboard 2 — Trust headline"
+  },
+  "onboardingTrustSubtitle": "Każde miejsce ma jeden z trzech poziomów weryfikacji",
+  "@onboardingTrustSubtitle": {},
+  "onboardingTrustVerifiedOwner": "Zweryfikowany właściciel",
+  "@onboardingTrustVerifiedOwner": {},
+  "onboardingTrustCommunity": "Społeczność",
+  "@onboardingTrustCommunity": {},
+  "onboardingTrustPending": "Oczekuje",
+  "@onboardingTrustPending": {},
+
+  "onboardingCommunityTitle": "Zbudowane przez muzułmanów w Polsce",
+  "@onboardingCommunityTitle": {
+    "description": "Onboard 3 — Community headline"
+  },
+  "onboardingCommunitySubtitle": "Dodawaj miejsca, potwierdzaj halal, pomóż innym znaleźć halal",
+  "@onboardingCommunitySubtitle": {},
+  "onboardingCommunityStatLabel": "miejsc zweryfikowanych w tym tygodniu",
+  "@onboardingCommunityStatLabel": {
+    "description": "Caption under the Onboard 3 community-activity stat number (e.g., '147 miejsc zweryfikowanych w tym tygodniu'). Placeholder for the post-MVP real-time counter; not pluralised because the placeholder count is hard-coded ≥ 5."
+  },
+
+  "locationPermissionTitle": "Pozwól pokazać miejsca w pobliżu",
+  "@locationPermissionTitle": {
+    "description": "LocationPermission screen headline"
+  },
+  "locationPermissionSubtitle": "Twoja lokalizacja jest używana tylko podczas korzystania z aplikacji",
+  "@locationPermissionSubtitle": {},
+  "locationPermissionAllow": "Pozwól",
+  "@locationPermissionAllow": {},
+  "locationPermissionNotNow": "Nie teraz",
+  "@locationPermissionNotNow": {},
+
+  "settingsTitle": "Ustawienia",
+  "@settingsTitle": {
+    "description": "Settings screen title (placeholder until Settings feature is spec'd)"
+  },
+
+  "homeH1Before": "Miejsca ",
+  "@homeH1Before": { "description": "Home H1, text before the italic accent word" },
+  "homeH1Accent": "halal",
+  "@homeH1Accent": { "description": "Home H1 accent word (italic, umber)" },
+  "homeH1After": "\nw Polsce",
+  "@homeH1After": { "description": "Home H1, text after the accent (leading newline = hard line break)" },
+  "homeSubtitle": "Restauracje, meczety i sklepy — w całym kraju",
+  "@homeSubtitle": {},
+  "homeSearchHint": "Szukaj miejsca w Polsce…",
+  "@homeSearchHint": {},
+
+  "chipAll": "Wszystko",
+  "@chipAll": {},
+  "chipRestaurant": "Restauracje",
+  "@chipRestaurant": {},
+  "chipMasjid": "Meczety",
+  "@chipMasjid": {},
+  "chipGrocer": "Sklepy spożywcze",
+  "@chipGrocer": {},
+  "chipButcher": "Mięso halal",
+  "@chipButcher": {},
+  "chipShop": "Sklepy",
+  "@chipShop": {},
+  "chipCemetery": "Cmentarze",
+  "@chipCemetery": {},
+
+  "sectionFeatured": "Polecane miejsca",
+  "@sectionFeatured": {},
+  "miniMapOpen": "Otwórz mapę",
+  "@miniMapOpen": {},
+  "miniMapCount": "{count, plural, one{{count} miejsce w Polsce} few{{count} miejsca w Polsce} many{{count} miejsc w Polsce} other{{count} miejsca w Polsce}}",
+  "@miniMapCount": {
+    "description": "Mini-map place-count pill (Polish 3-form plural)",
+    "placeholders": { "count": { "type": "int" } }
+  },
+
+  "homeEmptyCategory": "Brak miejsc w tej kategorii — wkrótce dodamy więcej",
+  "@homeEmptyCategory": {},
+  "homeLoadError": "Nie udało się załadować miejsc",
+  "@homeLoadError": {},
+  "homeRetry": "Spróbuj ponownie",
+  "@homeRetry": {},
+  "bookmarkAdd": "Zapisz miejsce",
+  "@bookmarkAdd": { "description": "Semantic label — add bookmark" },
+  "bookmarkRemove": "Usuń z zapisanych",
+  "@bookmarkRemove": { "description": "Semantic label — remove bookmark" },
+
+  "searchCancel": "Anuluj",
+  "@searchCancel": {},
+  "searchGroupRecent": "Ostatnie",
+  "@searchGroupRecent": {},
+  "searchGroupSuggestions": "Podpowiedzi",
+  "@searchGroupSuggestions": {},
+  "searchGroupCategories": "Kategorie",
+  "@searchGroupCategories": {},
+  "searchNoResults": "Brak wyników",
+  "@searchNoResults": {},
+  "searchRefill": "Wypełnij ponownie",
+  "@searchRefill": { "description": "Semantic label — refill a recent query" },
+  "refreshCaption": "Aktualizuję mapę…",
+  "@refreshCaption": { "description": "Pull-to-refresh indicator caption" },
+
+  "mapSearchHint": "Szukaj na mapie…",
+  "@mapSearchHint": { "description": "Map view search bar placeholder" },
+  "listFilterHint": "Filtruj listę…",
+  "@listFilterHint": { "description": "List view inline-filter placeholder" },
+  "mapToggleList": "Lista",
+  "@mapToggleList": { "description": "Map/List segmented toggle — list segment (map segment reuses tabMap)" },
+  "mapShowList": "Pokaż listę",
+  "@mapShowList": { "description": "Bottom-sheet link to switch to the list view" },
+  "mapSortNearest": "Najbliższe",
+  "@mapSortNearest": {},
+  "mapSortAlphabetical": "Alfabetycznie",
+  "@mapSortAlphabetical": {},
+  "mapSortByCategory": "Wg kategorii",
+  "@mapSortByCategory": {},
+  "mapFiltersTitle": "Filtry",
+  "@mapFiltersTitle": {},
+  "mapAllPlacesTitle": "Wszystkie miejsca",
+  "@mapAllPlacesTitle": { "description": "List view header title" },
+  "mapPlacesCount": "{count, plural, one{{count} miejsce} few{{count} miejsca} many{{count} miejsc} other{{count} miejsca}}",
+  "@mapPlacesCount": {
+    "description": "Bottom-sheet/list header count of visible places (Polish 3-form plural)",
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "mapLocateMe": "Pokaż moją lokalizację",
+  "@mapLocateMe": { "description": "Semantic label — locate-me FAB" },
+  "mapNavigate": "Nawiguj",
+  "@mapNavigate": { "description": "Navigate button (opens external maps)" },
+  "mapPrayerTimes": "Godziny modlitw",
+  "@mapPrayerTimes": { "description": "Mawaqit prayer-times link on mosque cards" },
+
+  "profileTitle": "Profil",
+  "@profileTitle": { "description": "Profile tab title (Screen 1 header)" },
+  "comingSoonBadge": "Wkrótce",
+  "@comingSoonBadge": { "description": "Coming-soon banner pill (leading dot drawn separately)" },
+  "comingSoonHeadlineBefore": "Konta są już ",
+  "@comingSoonHeadlineBefore": {},
+  "comingSoonHeadlineAccent": "w drodze",
+  "@comingSoonHeadlineAccent": { "description": "Italic + sand accent word of the coming-soon headline" },
+  "comingSoonSub": "Pracujemy nad logowaniem, recenzjami i zapisanymi miejscami. Na razie korzystaj z aplikacji jako gość — cała mapa jest dostępna bez konta.",
+  "@comingSoonSub": {},
+  "notifyButton": "Powiadom mnie, gdy będzie gotowe",
+  "@notifyButton": { "description": "Primary button on the coming-soon banner; opens the external form" },
+  "groupPreferences": "Preferencje",
+  "@groupPreferences": {},
+  "groupCommunity": "Społeczność",
+  "@groupCommunity": {},
+  "groupInfo": "Informacje",
+  "@groupInfo": {},
+  "groupLinks": "Linki",
+  "@groupLinks": {},
+  "rowLanguage": "Język",
+  "@rowLanguage": {},
+  "rowSuggestPlace": "Zaproponuj miejsce",
+  "@rowSuggestPlace": {},
+  "rowSuggestPlaceSub": "Otwórz formularz — pomóż rozwijać mapę halal",
+  "@rowSuggestPlaceSub": {},
+  "rowAbout": "O aplikacji",
+  "@rowAbout": {},
+  "rowPrivacy": "Polityka prywatności",
+  "@rowPrivacy": {},
+  "rowWebsite": "Strona internetowa",
+  "@rowWebsite": {},
+  "rowTerms": "Regulamin",
+  "@rowTerms": {},
+  "rowLicenses": "Licencje open-source",
+  "@rowLicenses": {},
+  "languageKicker": "Ustawienia",
+  "@languageKicker": { "description": "BackHeader kicker on the Language screen" },
+  "languageTitle": "Język",
+  "@languageTitle": {},
+  "chooseLanguage": "Wybierz język aplikacji",
+  "@chooseLanguage": { "description": "Section label on the Language screen" },
+  "languageNamePl": "Polski",
+  "@languageNamePl": { "description": "Native name of Polish (constant across locales)" },
+  "languageNameEn": "English",
+  "@languageNameEn": {},
+  "languageNameAr": "العربية",
+  "@languageNameAr": {},
+  "languageEnglishPl": "Polish",
+  "@languageEnglishPl": { "description": "Trailing English name for the Polish row" },
+  "languageEnglishEn": "English",
+  "@languageEnglishEn": {},
+  "languageEnglishAr": "Arabic",
+  "@languageEnglishAr": {},
+  "aboutKicker": "Informacje",
+  "@aboutKicker": { "description": "BackHeader kicker on the About screen" },
+  "aboutTitle": "O aplikacji",
+  "@aboutTitle": {},
+  "appMission": "Pomagamy muzułmanom w Polsce odkrywać zweryfikowane miejsca halal — restauracje, meczety i sklepy — w jednej przejrzystej mapie.",
+  "@appMission": {},
+  "versionLine": "Wersja {version} (launch)",
+  "@versionLine": {
+    "description": "Version line on the About app-mark card",
+    "placeholders": { "version": { "type": "String" } }
+  },
+  "footerMission": "Zrobione dla społeczności muzułmańskiej w Polsce",
+  "@footerMission": { "description": "Centered footer mission line" },
+  "footerCopyright": "© 2026 Halal Map Polskie",
+  "@footerCopyright": {},
+  "linkOpenFailed": "Nie udało się otworzyć linku",
+  "@linkOpenFailed": { "description": "SnackBar shown when an external link cannot be opened" }
+}

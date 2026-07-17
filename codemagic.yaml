@@ -1,0 +1,99 @@
+# Codemagic CI/CD — Halal Map Polskie (Flutter, iOS)
+# Docs: https://docs.codemagic.io/yaml-quick-start/building-a-flutter-app/
+#
+# GOAL: build an iOS app from Windows (no Mac) WITHOUT a paid Apple Developer
+# account. Codemagic produces an *unsigned* .ipa artifact; you then install it
+# on your iPhone from your PC with Sideloadly (or AltStore), which re-signs it
+# with your FREE Apple ID over USB.
+#
+#   Why unsigned? Codemagic's automatic signing needs an App Store Connect API
+#   key, which only paid Developer Program members can create. Free "Personal
+#   Team" signing only works interactively in Xcode on a Mac. So we sign on the
+#   PC side instead.
+#
+# ONE-TIME SETUP in the Codemagic UI:
+#   1. Connect this repo (git@github.com:MuayyadAH/halal-mapa-polskie.git).
+#   2. Environment variables → group `halalmap_secrets`:
+#        MAP_TILES_KEY = <your MapTiler key>   (mark "Secure")
+#      (Optional, only when you have real values: SUGGEST_FORM_URL, WEBSITE_URL,
+#       PRIVACY_URL, TERMS_URL — they have placeholder defaults otherwise.)
+#
+# AFTER THE BUILD (on your Windows PC):
+#   - Download `Runner-unsigned.ipa` from the Codemagic build artifacts.
+#   - Install Sideloadly (https://sideloadly.io), plug in your iPhone via USB,
+#     drop in the .ipa, sign in with your free Apple ID, and click Start.
+#   - Free-account limits: ~7-day validity (re-sideload to refresh), up to 3
+#     apps, and you must trust the developer profile under
+#     Settings → General → VPN & Device Management on first launch.
+
+definitions:
+  instance: &instance
+    instance_type: mac_mini_m2
+    max_build_duration: 60
+
+workflows:
+  # ---------------------------------------------------------------------------
+  # Analyze + unit/widget tests (no signing, no device).
+  # ---------------------------------------------------------------------------
+  test:
+    <<: *instance
+    name: Analyze & Test
+    environment:
+      flutter: stable
+    triggering:
+      events:
+        - pull_request
+      branch_patterns:
+        - pattern: '*'
+          include: true
+    scripts:
+      - name: Get packages
+        script: flutter pub get
+      - name: Generate localizations
+        script: flutter gen-l10n
+      - name: Analyze
+        script: flutter analyze
+      - name: Unit + widget tests
+        script: flutter test
+
+  # ---------------------------------------------------------------------------
+  # iOS unsigned build → downloadable .ipa for Sideloadly/AltStore.
+  # No Apple account, no code signing, no publishing.
+  # ---------------------------------------------------------------------------
+  ios-unsigned:
+    <<: *instance
+    name: iOS (unsigned, for Sideloadly)
+    environment:
+      groups:
+        - halalmap_secrets       # provides MAP_TILES_KEY
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: develop
+          include: true
+        - pattern: 004-profile-screen
+          include: true
+    scripts:
+      - name: Get packages
+        script: flutter pub get
+      - name: Generate localizations
+        script: flutter gen-l10n
+      - name: Install CocoaPods dependencies
+        script: find . -name "Podfile" -execdir pod install \;
+      - name: Build unsigned .app
+        script: |
+          flutter build ios --release --no-codesign \
+            --dart-define=MAP_TILES_KEY=$MAP_TILES_KEY
+      - name: Package unsigned .ipa (Payload/Runner.app)
+        script: |
+          cd build/ios/iphoneos
+          mkdir -p Payload
+          cp -r Runner.app Payload/
+          zip -r9 "$CM_BUILD_DIR/Runner-unsigned.ipa" Payload
+    artifacts:
+      - Runner-unsigned.ipa
+      - /tmp/xcodebuild_logs/*.log
