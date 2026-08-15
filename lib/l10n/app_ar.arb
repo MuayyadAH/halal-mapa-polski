@@ -13,7 +13,6 @@
   "onboardingSkip": "تخطي",
   "onboardingNext": "التالي",
   "onboardingContinue": "متابعة",
-  "onboardingBrowseAsGuest": "تصفح كزائر",
 
   "onboardingFindTitle": "اكتشف أماكن حلال في جميع أنحاء بولندا",
   "onboardingFindSubtitle": "مطاعم ومساجد ومتاجر حلال قريبة — موثّقة من المجتمع",
@@ -85,6 +84,41 @@
   "mapLocateMe": "أظهر موقعي",
   "mapNavigate": "التنقل",
   "mapPrayerTimes": "أوقات الصلاة",
+
+  "prayerFajr": "الفجر",
+  "prayerDhuhr": "الظهر",
+  "prayerAsr": "العصر",
+  "prayerMaghrib": "المغرب",
+  "prayerIsha": "العشاء",
+  "prayerJumua": "الجمعة",
+  "prayerInMinutes": "بعد {minutes} د",
+  "@prayerInMinutes": {
+    "placeholders": { "minutes": { "type": "int" } }
+  },
+  "prayerTimesUnavailable": "أوقات الصلاة غير متاحة مؤقتًا",
+
+  "rowQibla": "اتجاه القبلة",
+  "qiblaTitle": "القبلة",
+  "qiblaDegrees": "{degrees}° من الشمال",
+  "@qiblaDegrees": {
+    "placeholders": { "degrees": { "type": "int" } }
+  },
+  "qiblaDistance": "{km} كم إلى مكة",
+  "@qiblaDistance": {
+    "placeholders": { "km": { "type": "int" } }
+  },
+  "qiblaNoCompass": "لا يوجد مستشعر بوصلة — الاتجاه معروض من الشمال",
+  "qiblaAligned": "أنت باتجاه القبلة",
+
+  "savedEmptyTitle": "لا يوجد شيء هنا بعد",
+  "savedEmptySub": "احفظ الأماكن بالنقر على إشارة الحفظ في بطاقة المكان",
+
+  "verifiedByCommunity": "موثّق من المجتمع",
+  "detailCommunityNote": "ملاحظة من المجتمع",
+  "detailCoordinates": "الإحداثيات",
+  "detailCopied": "تم نسخ الإحداثيات",
+  "detailNotFoundTitle": "لم يتم العثور على المكان",
+  "detailNotFoundSub": "ربما تمت إزالة هذا المكان من القائمة",
 
   "profileTitle": "الملف الشخصي",
   "comingSoonBadge": "قريبًا",

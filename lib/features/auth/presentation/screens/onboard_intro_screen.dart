@@ -15,9 +15,9 @@ import 'onboard_trust_screen.dart';
 
 /// The three-page intro shell. Hosts the [PageView] containing Onboard 1/2/3
 /// plus shared chrome: language picker (top-right, always), skip link
-/// (top-left, on pages 0 and 1), page indicator (bottom-center), and the
-/// primary CTA(s) (Dalej for pages 0/1, Kontynuuj + Przeglądaj jako gość
-/// for page 2).
+/// (top-left, on pages 0 and 1), page indicator (bottom-center), and a single
+/// primary CTA (Dalej for pages 0/1, Kontynuuj for page 2). The app is
+/// account-free at launch, so there is no guest/sign-in split — one button.
 class OnboardIntroScreen extends ConsumerStatefulWidget {
   const OnboardIntroScreen({super.key});
 
@@ -83,12 +83,6 @@ class _OnboardIntroScreenState extends ConsumerState<OnboardIntroScreen> {
     } else {
       context.go('/onboarding/location');
     }
-  }
-
-  Future<void> _onBrowseAsGuest() async {
-    await ref.read(onboardingNotifierProvider.notifier).complete();
-    if (!mounted) return;
-    context.go('/home');
   }
 
   @override
@@ -180,7 +174,7 @@ class _OnboardIntroScreenState extends ConsumerState<OnboardIntroScreen> {
                             child: Text(l10n.onboardingNext),
                           ),
                         )
-                      else ...[
+                      else
                         SizedBox(
                           width: double.infinity,
                           child: FilledButton(
@@ -199,23 +193,6 @@ class _OnboardIntroScreenState extends ConsumerState<OnboardIntroScreen> {
                             child: Text(l10n.onboardingContinue),
                           ),
                         ),
-                        const SizedBox(height: 4),
-                        TextButton(
-                          onPressed: _onBrowseAsGuest,
-                          style: TextButton.styleFrom(
-                            foregroundColor: HmpColors.cocoa800,
-                            padding: const EdgeInsets.symmetric(vertical: 12),
-                          ),
-                          child: Text(
-                            l10n.onboardingBrowseAsGuest,
-                            style: const TextStyle(
-                              fontFamily: HmpFonts.ui,
-                              fontWeight: FontWeight.w700,
-                              fontSize: 15,
-                            ),
-                          ),
-                        ),
-                      ],
                     ],
                   ),
                 ),

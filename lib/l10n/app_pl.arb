@@ -37,11 +37,6 @@
   "@onboardingContinue": {
     "description": "Primary CTA on Onboard 3"
   },
-  "onboardingBrowseAsGuest": "Przeglądaj jako gość",
-  "@onboardingBrowseAsGuest": {
-    "description": "Secondary CTA on Onboard 3"
-  },
-
   "onboardingFindTitle": "Znajdź miejsca halal w całej Polsce",
   "@onboardingFindTitle": {
     "description": "Onboard 1 — Find headline"
@@ -180,6 +175,62 @@
   "@mapNavigate": { "description": "Navigate button (opens external maps)" },
   "mapPrayerTimes": "Godziny modlitw",
   "@mapPrayerTimes": { "description": "Mawaqit prayer-times link on mosque cards" },
+
+  "prayerFajr": "Fadżr",
+  "@prayerFajr": { "description": "Prayer name — canonical transliteration kept across locales (constitution §5.4); Polish uses the common Polish transliteration" },
+  "prayerDhuhr": "Zuhr",
+  "@prayerDhuhr": {},
+  "prayerAsr": "Asr",
+  "@prayerAsr": {},
+  "prayerMaghrib": "Maghrib",
+  "@prayerMaghrib": {},
+  "prayerIsha": "Isza",
+  "@prayerIsha": {},
+  "prayerJumua": "Jumu'ah",
+  "@prayerJumua": { "description": "Friday congregational prayer — transliterated, never translated (constitution §5.4)" },
+  "prayerInMinutes": "za {minutes} min",
+  "@prayerInMinutes": {
+    "description": "Countdown chip on the prayer pill",
+    "placeholders": { "minutes": { "type": "int" } }
+  },
+  "prayerTimesUnavailable": "Godziny modlitw są chwilowo niedostępne",
+  "@prayerTimesUnavailable": { "description": "Shown when the Mawaqit page can't be fetched and no cache exists" },
+
+  "rowQibla": "Kierunek Qibla",
+  "@rowQibla": { "description": "Profile → Preferences row opening the qibla compass" },
+  "qiblaTitle": "Qibla",
+  "@qiblaTitle": {},
+  "qiblaDegrees": "{degrees}° od północy",
+  "@qiblaDegrees": {
+    "description": "Numeric qibla bearing under the compass dial",
+    "placeholders": { "degrees": { "type": "int" } }
+  },
+  "qiblaDistance": "{km} km do Mekki",
+  "@qiblaDistance": {
+    "placeholders": { "km": { "type": "int" } }
+  },
+  "qiblaNoCompass": "Brak czujnika kompasu — kierunek pokazany od północy",
+  "@qiblaNoCompass": { "description": "Fallback note when the device has no compass sensor" },
+  "qiblaAligned": "Skierowane na Qiblę",
+  "@qiblaAligned": { "description": "Shown when the device points within 5° of the qibla" },
+
+  "savedEmptyTitle": "Nic tu jeszcze nie ma",
+  "@savedEmptyTitle": { "description": "Saved tab empty-state title (guest-first — no sign-in CTA)" },
+  "savedEmptySub": "Zapisuj miejsca dotykając zakładki na karcie miejsca",
+  "@savedEmptySub": {},
+
+  "verifiedByCommunity": "Zweryfikowane przez społeczność",
+  "@verifiedByCommunity": { "description": "Community-verification chip on the place detail (constitution §5.2 canonical vocabulary)" },
+  "detailCommunityNote": "Notatka społeczności",
+  "@detailCommunityNote": { "description": "Kicker above the sheet comment pull-quote on the place detail" },
+  "detailCoordinates": "Współrzędne",
+  "@detailCoordinates": { "description": "Semantic label — coordinates row (tap to copy)" },
+  "detailCopied": "Skopiowano współrzędne",
+  "@detailCopied": { "description": "SnackBar after copying coordinates" },
+  "detailNotFoundTitle": "Nie znaleziono miejsca",
+  "@detailNotFoundTitle": { "description": "Place-detail empty state title (id not in the current list)" },
+  "detailNotFoundSub": "To miejsce mogło zostać usunięte z listy",
+  "@detailNotFoundSub": {},
 
   "profileTitle": "Profil",
   "@profileTitle": { "description": "Profile tab title (Screen 1 header)" },

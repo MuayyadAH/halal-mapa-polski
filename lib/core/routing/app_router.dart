@@ -7,11 +7,18 @@ import '../../features/auth/presentation/screens/onboard_intro_screen.dart';
 import '../../features/contribute/contribute_screen.dart';
 import '../../features/home/presentation/home_screen.dart';
 import '../../features/map/map_screen.dart';
+import '../../features/places/place_detail_screen.dart';
 import '../../features/profile/about_screen.dart';
 import '../../features/profile/language_screen.dart';
 import '../../features/profile/profile_screen.dart';
+import '../../features/profile/qibla_screen.dart';
 import '../../features/saved/saved_screen.dart';
 import 'scaffold_with_tabs.dart';
+
+/// Canonical push location for a place detail page. Ids are derived from
+/// name + coordinates and contain spaces/pipes, so they must be URI-encoded.
+String placeDetailLocation(String placeId) =>
+    '/place/${Uri.encodeComponent(placeId)}';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
@@ -32,6 +39,14 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/onboarding/location',
         builder: (_, __) => const LocationPermissionScreen(),
+      ),
+
+      // Place detail — top-level (outside the shell) so it covers the tab bar.
+      // Place ids contain `|`/spaces; callers push via [placeDetailLocation].
+      GoRoute(
+        path: '/place/:id',
+        builder: (_, state) =>
+            PlaceDetailScreen(placeId: state.pathParameters['id']!),
       ),
 
       // Main app — 5-tab StatefulShellRoute.
@@ -74,6 +89,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                   GoRoute(
                     path: 'language',
                     builder: (_, __) => const LanguageScreen(),
+                  ),
+                  GoRoute(
+                    path: 'qibla',
+                    builder: (_, __) => const QiblaScreen(),
                   ),
                   GoRoute(
                     path: 'about',

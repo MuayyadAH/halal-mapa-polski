@@ -20,7 +20,8 @@
 | **Map tiles** | Self-hosted or community provider — MapTiler / Stadia Maps / Protomaps (**recommended MapTiler for launch; final choice deferred to ADR per 003-map-screen R17**); key via `--dart-define`, never committed | - | Vector tiles for the custom warm cocoa/cream basemap |
 | **Location** | `geolocator` (only-while-using, **approximate accuracy** by default per `constitution.md` §1.7), wrapped behind a `LocationService` in `lib/core/location/`; prompt via existing `permission_handler` | - | Device location → user-location dot, locate-me, distance (haversine), "Najbliższe" sort. **Introduced by 003-map-screen** |
 | **Geocoding** | External API (TBD — Nominatim / MapTiler / Mapbox Geocoding) | - | Address → coordinates for submission flow |
-| **Prayer times** | On-device via Adhan library (`adhan_dart` or equivalent) | - | Daily prayer times per city + madhab |
+| **Prayer times** | **Mawaqit only** (product decision 2026-07-17, supersedes the earlier Adhan plan): mosques carry a `Mawaqit Link` sheet column; the app fetches the mosque page's embedded `confData` JSON (`lib/core/prayer_times/`) and caches the yearly calendar in prefs for offline use. No on-device calculation | - | Mosque prayer times (incl. Jumu'ah) on the place detail + the Home next-prayer pill (nearest Mawaqit mosque) |
+| **Qibla / compass** | `flutter_compass` heading stream behind `CompassService` (`lib/core/qibla/`); great-circle bearing to the Kaaba computed in-app; static from-north fallback when no sensor | - | Qibla compass screen (Profile → Preferences). Introduced 2026-07-17 |
 | **Localization** | Flutter `intl` + ARB | - | pl (primary), en, ar (with RTL) |
 | **Local Storage** | TBD — Drift, Isar, or Hive | - | On-device cache of places, saved places, draft submissions |
 | **Local Preferences** | `shared_preferences` | - | Non-sensitive on-device prefs and the guest **bookmark** id set (`bookmarked_place_ids`). Never used for PII/tokens (those use Secure Storage). Introduced by 002-home-screen |
@@ -556,7 +557,8 @@ lib/
 │   ├── theme/                   # tokens.dart, theme.dart (see §II.10)
 │   ├── api/                     # Backend API client
 │   ├── map/                     # MapLibre wrapper, style JSON, geocoder
-│   ├── prayer_times/            # Adhan integration, per-city + madhab
+│   ├── prayer_times/            # Mawaqit fetch/parse/cache (mawaqit.dart + mawaqit_service.dart)
+│   ├── qibla/                   # Qibla bearing math + compass heading service
 │   ├── storage/                 # Local cache (Drift/Isar/Hive — TBD)
 │   ├── routing/                 # go_router / auto_route — TBD
 │   ├── logging/                 # Logger abstraction

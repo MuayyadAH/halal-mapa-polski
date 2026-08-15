@@ -16,6 +16,7 @@ import 'widgets/home_search_bar.dart';
 import 'widgets/home_skeletons.dart';
 import 'widgets/mini_map.dart';
 import 'widgets/place_card.dart';
+import 'widgets/prayer_pill.dart';
 import 'widgets/search_view.dart';
 import 'widgets/section_header.dart';
 
@@ -76,6 +77,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                           onTap: () =>
                               ref.read(searchActiveProvider.notifier).open(),
                         ),
+                      ),
+                      // The pill spaces itself (top padding) so nothing
+                      // doubles up when it hides.
+                      FadeRiseIn(
+                        controller: entrance,
+                        start: 0.10,
+                        end: 0.52,
+                        child: const PrayerPill(),
                       ),
                       const SizedBox(height: 18),
                       FadeRiseIn(

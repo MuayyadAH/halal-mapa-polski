@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:halal_map_polskie/core/maps/maps_launcher.dart';
 import 'package:halal_map_polskie/core/places/data/bookmark_repository.dart';
@@ -6,6 +7,7 @@ import 'package:halal_map_polskie/core/places/data/place_repository.dart';
 import 'package:halal_map_polskie/core/places/domain/category.dart';
 import 'package:halal_map_polskie/core/places/domain/place.dart';
 import 'package:halal_map_polskie/core/search/recent_searches_repository.dart';
+import 'package:halal_map_polskie/features/places/place_detail_screen.dart';
 import 'package:halal_map_polskie/l10n/generated/app_localizations.dart';
 
 /// In-memory bookmark store for widget tests.
@@ -103,5 +105,36 @@ Widget localizedHost(
       data: MediaQueryData(disableAnimations: reduceMotion),
       child: Scaffold(body: child),
     ),
+  );
+}
+
+/// Like [localizedHost] but with a GoRouter in the tree so widgets that
+/// `context.push` the place detail (`/place/:id`) can navigate in tests.
+Widget routedHost(
+  Widget child, {
+  Locale locale = const Locale('pl'),
+  bool reduceMotion = false,
+}) {
+  final router = GoRouter(
+    routes: [
+      GoRoute(
+        path: '/',
+        builder: (_, __) => MediaQuery(
+          data: MediaQueryData(disableAnimations: reduceMotion),
+          child: Scaffold(body: child),
+        ),
+      ),
+      GoRoute(
+        path: '/place/:id',
+        builder: (_, state) =>
+            PlaceDetailScreen(placeId: state.pathParameters['id']!),
+      ),
+    ],
+  );
+  return MaterialApp.router(
+    locale: locale,
+    localizationsDelegates: AppLocalizations.localizationsDelegates,
+    supportedLocales: AppLocalizations.supportedLocales,
+    routerConfig: router,
   );
 }

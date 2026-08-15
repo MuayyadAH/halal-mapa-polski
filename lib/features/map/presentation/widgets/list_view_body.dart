@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:halal_map_polskie/core/maps/maps_launcher.dart';
+import 'package:go_router/go_router.dart';
+import 'package:halal_map_polskie/core/routing/app_router.dart';
 import 'package:halal_map_polskie/core/search/place_match.dart';
 import 'package:halal_map_polskie/core/theme/tokens.dart';
 import 'package:halal_map_polskie/l10n/generated/app_localizations.dart';
@@ -145,8 +146,7 @@ class _ListViewBodyState extends ConsumerState<ListViewBody>
                     end: (start + 0.3).clamp(0.0, 1.0),
                     child: ListRow(
                       place: place,
-                      onTap: () =>
-                          ref.read(mapsLauncherProvider).openPlace(place),
+                      onTap: () => context.push(placeDetailLocation(place.id)),
                     ),
                   );
                 },

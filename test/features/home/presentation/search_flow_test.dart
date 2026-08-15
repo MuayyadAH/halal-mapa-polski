@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:halal_map_polskie/core/maps/maps_launcher.dart';
 import 'package:halal_map_polskie/core/places/data/bookmark_repository.dart';
 import 'package:halal_map_polskie/core/places/data/place_repository.dart';
 import 'package:halal_map_polskie/core/search/recent_searches_repository.dart';
 import 'package:halal_map_polskie/features/home/presentation/home_screen.dart';
 import 'package:halal_map_polskie/features/home/presentation/widgets/home_search_bar.dart';
+import 'package:halal_map_polskie/features/places/place_detail_screen.dart';
 
 import '../../../helpers/pump_app.dart';
 
@@ -60,9 +60,9 @@ void main() {
     expect(find.byType(HomeSearchBar), findsOneWidget);
   });
 
-  testWidgets('typing filters suggestions; tapping one opens maps + closes',
+  testWidgets(
+      'typing filters suggestions; tapping one opens the detail + closes',
       (tester) async {
-    final launcher = FakeMapsLauncher();
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
@@ -71,9 +71,8 @@ void main() {
               .overrideWithValue(FakeBookmarkRepository()),
           recentSearchesRepositoryProvider
               .overrideWithValue(FakeRecentSearchesRepository()),
-          mapsLauncherProvider.overrideWithValue(launcher),
         ],
-        child: localizedHost(const HomeScreen(), reduceMotion: true),
+        child: routedHost(const HomeScreen(), reduceMotion: true),
       ),
     );
     await tester.pump();
@@ -86,9 +85,9 @@ void main() {
 
     expect(find.text('Bar Halal'), findsOneWidget);
     await tester.tap(find.text('Bar Halal'));
-    await tester.pump();
+    await tester.pumpAndSettle();
 
-    expect(launcher.opened.single.name, 'Bar Halal');
+    expect(find.byType(PlaceDetailScreen), findsOneWidget);
     expect(find.text('Anuluj'), findsNothing);
   });
 

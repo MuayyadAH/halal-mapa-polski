@@ -23,9 +23,13 @@ class ComingSoonBanner extends ConsumerStatefulWidget {
 class _ComingSoonBannerState extends ConsumerState<ComingSoonBanner>
     with TickerProviderStateMixin {
   late final AnimationController _glow = AnimationController(
-      vsync: this, duration: const Duration(milliseconds: 3400),);
+    vsync: this,
+    duration: const Duration(milliseconds: 3400),
+  );
   late final AnimationController _float = AnimationController(
-      vsync: this, duration: const Duration(milliseconds: 3200),);
+    vsync: this,
+    duration: const Duration(milliseconds: 3200),
+  );
 
   bool _started = false;
 

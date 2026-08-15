@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:halal_map_polskie/core/map/map_engine.dart';
 import 'package:halal_map_polskie/core/places/domain/place.dart';
+import 'package:halal_map_polskie/core/routing/app_router.dart';
 import 'package:halal_map_polskie/core/theme/tokens.dart';
 import 'package:halal_map_polskie/l10n/generated/app_localizations.dart';
 import 'package:halal_map_polskie/shared/widgets/fade_rise_in.dart';
@@ -69,6 +71,11 @@ class _PlaceSheetState extends ConsumerState<PlaceSheet>
   }
 
   void _selectCard(Place place) {
+    // Second tap on the already-selected card drills into the detail page.
+    if (ref.read(selectedPlaceIdProvider) == place.id) {
+      context.push(placeDetailLocation(place.id));
+      return;
+    }
     ref.read(selectedPlaceIdProvider.notifier).select(place.id);
     final engine = ref.read(mapEngineProvider);
     final reduceMotion = MediaQuery.of(context).disableAnimations;

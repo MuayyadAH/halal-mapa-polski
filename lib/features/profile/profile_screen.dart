@@ -88,6 +88,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                       trailingValue: _activeLanguageName(l10n, locale),
                       onTap: () => context.push('/profile/language'),
                     ),
+                    SettingRow(
+                      icon: Icons.explore_outlined,
+                      label: l10n.rowQibla,
+                      onTap: () => context.push('/profile/qibla'),
+                    ),
                   ],
                 ),
               ),

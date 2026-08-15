@@ -10,11 +10,15 @@ The app boots into onboarding, then a 5-tab shell (**Strona / Mapa / Dodaj / Zap
 
 | Feature | Spec | Status |
 |---|---|---|
-| Onboarding & location-permission flow | `specs/001-onboarding-flow/` | ✅ |
-| Home — greeting, search, category chips, mini-map, nearby places | `specs/002-home-screen/` | ✅ |
+| Onboarding & location-permission flow (single CTA — no login/guest split) | `specs/001-onboarding-flow/` | ✅ |
+| Home — greeting, search, category chips, prayer pill, mini-map, nearby places | `specs/002-home-screen/` | ✅ |
 | Map — MapLibre custom basemap, pins/clusters, filters, list/map toggle, locate-me | `specs/003-map-screen/` | ✅ |
-| Profile (guest) — coming-soon banner, Language (pl/en/ar live switch), About | `specs/004-profile-screen/` | ✅ |
-| Add (Dodaj), Saved (Zapisane), Place detail | — | placeholder screens |
+| Profile (guest) — coming-soon banner, Language (pl/en/ar live switch), Qibla, About | `specs/004-profile-screen/` | ✅ |
+| Place detail — editorial page with community note, coordinates, Navigate/Save | — | ✅ |
+| Saved (Zapisane) — bookmark list, category filter chips, nearest-first | — | ✅ |
+| Prayer times — Mawaqit per-mosque times (yearly calendar cached offline), Home next-prayer pill | — | ✅ |
+| Qibla compass — live heading via `flutter_compass`, static fallback | — | ✅ |
+| Add (Dodaj) | — | placeholder screen |
 
 Place data at launch comes from a published Google Sheet (CSV), loaded by `PlaceRepository` — there is no backend yet (it lives in a separate future repo).
 

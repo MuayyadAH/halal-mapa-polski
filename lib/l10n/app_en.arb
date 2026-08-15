@@ -13,7 +13,6 @@
   "onboardingSkip": "Skip",
   "onboardingNext": "Next",
   "onboardingContinue": "Continue",
-  "onboardingBrowseAsGuest": "Browse as guest",
 
   "onboardingFindTitle": "Find halal places across Poland",
   "onboardingFindSubtitle": "Restaurants, mosques, and halal shops nearby — verified by the community",
@@ -85,6 +84,41 @@
   "mapLocateMe": "Show my location",
   "mapNavigate": "Navigate",
   "mapPrayerTimes": "Prayer times",
+
+  "prayerFajr": "Fajr",
+  "prayerDhuhr": "Dhuhr",
+  "prayerAsr": "Asr",
+  "prayerMaghrib": "Maghrib",
+  "prayerIsha": "Isha",
+  "prayerJumua": "Jumu'ah",
+  "prayerInMinutes": "in {minutes} min",
+  "@prayerInMinutes": {
+    "placeholders": { "minutes": { "type": "int" } }
+  },
+  "prayerTimesUnavailable": "Prayer times are temporarily unavailable",
+
+  "rowQibla": "Qibla direction",
+  "qiblaTitle": "Qibla",
+  "qiblaDegrees": "{degrees}° from north",
+  "@qiblaDegrees": {
+    "placeholders": { "degrees": { "type": "int" } }
+  },
+  "qiblaDistance": "{km} km to Makkah",
+  "@qiblaDistance": {
+    "placeholders": { "km": { "type": "int" } }
+  },
+  "qiblaNoCompass": "No compass sensor — direction shown from north",
+  "qiblaAligned": "Facing the Qibla",
+
+  "savedEmptyTitle": "Nothing here yet",
+  "savedEmptySub": "Save places by tapping the bookmark on a place card",
+
+  "verifiedByCommunity": "Community-verified",
+  "detailCommunityNote": "Community note",
+  "detailCoordinates": "Coordinates",
+  "detailCopied": "Coordinates copied",
+  "detailNotFoundTitle": "Place not found",
+  "detailNotFoundSub": "This place may have been removed from the list",
 
   "profileTitle": "Profile",
   "comingSoonBadge": "Coming soon",

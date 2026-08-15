@@ -45,7 +45,7 @@
 | **Backend API** | HTTPS (REST or GraphQL) | Places, users, reviews, photos, verification, moderation |
 | **Map Provider** | **MapLibre GL** (Flutter package: `maplibre_gl`) with self-hosted or community tile source (e.g. MapTiler, Stadia Maps, Protomaps) + custom style JSON | Map tiles and rendering. **Custom warm cocoa/cream basemap (light) and cocoa basemap (dark) is part of the brand — vanilla provider styles do not meet the design.** |
 | **Geocoding & Directions** | External API (TBD — Nominatim / MapTiler Geocoding / Mapbox Geocoding) | Address → coordinates for the submission flow; "Navigate" action deep-links to the OS maps app rather than rendering directions in-app |
-| **Prayer Times** | On-device calculation via Adhan library (`adhan_dart` or equivalent) | Daily prayer times per city, per madhab; powers the Maghrib pill (Home/Map), masjid detail times grid, and prayer reminders. No external API call required after city + madhab are resolved |
+| **Prayer Times** | **Mawaqit** (mosque pages' embedded `confData` JSON, fetched over HTTPS; yearly calendar cached on-device for offline). Product decision 2026-07-17 — supersedes the earlier on-device Adhan plan | Real mosque times (incl. jamaat/Jumu'ah) for mosques carrying a `Mawaqit Link`; powers the Home next-prayer pill and the masjid detail times grid |
 | **Auth Provider** | OAuth / OIDC or backend-issued JWT | Sign-in, guest sessions, owner-claim identity proof. Must support guest browsing without an account |
 | **Image Storage** | HTTPS (signed URLs) | User-uploaded photos for places and reviews. Clients never get long-lived bucket credentials |
 | **Push Notifications** | FCM (HTTP/2) | Moderation updates, community announcements, prayer reminders (if user opts in), event reminders |
@@ -107,7 +107,7 @@ Restaurant-specific:
 
 Masjid-specific:
 - `madhab` (enum: `sunni` | `shia` | `other`, optional)
-- `prayerTimes` (today's Fajr / Dhuhr / Asr / Maghrib / Isha — computed on-device via Adhan library, not stored)
+- `prayerTimes` (today's Fajr / Dhuhr / Asr / Maghrib / Isha — fetched from the mosque's Mawaqit page, cached on-device, not stored server-side)
 - `jamaatTimes` (`{ fajr?, dhuhr?, asr?, maghrib?, isha? }` — the masjid's chosen congregational offsets, manually entered)
 - `jumuah` (`{ time, khutbahLanguages: string[] }`)
 - `amenities` subset: `women_section`, `wheelchair`, `parking`, `wudu`, `madrasah`, `children_area`

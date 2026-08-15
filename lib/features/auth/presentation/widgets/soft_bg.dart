@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/tokens.dart';
+import '../../../../shared/widgets/geometric_motif.dart';
 
 /// Warm linear-gradient background with two soft radial blobs — sand-yellow
-/// top-right, muted green bottom-left. Mirrors the design's `<SoftBg/>`.
+/// top-right, muted green bottom-left — under the app's signature khatam
+/// lattice watermark. Mirrors the design's `<SoftBg/>`.
 ///
 /// Pass `dark: true` for the cocoa-tinted dark variant used on
 /// post-MVP dark surfaces (Welcome B, MasjidDetail, etc.).
@@ -47,6 +49,12 @@ class SoftBg extends StatelessWidget {
                 ? HmpColors.catMosque.withValues(alpha: 0.18)
                 : const Color(0xFFB4C89A).withValues(alpha: 0.55),
           ),
+        ),
+        GeometricMotif(
+          color: dark
+              ? HmpColors.cream50.withValues(alpha: 0.035)
+              : HmpColors.cocoa900.withValues(alpha: 0.035),
+          cell: 104,
         ),
       ],
     );

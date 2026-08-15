@@ -17,7 +17,9 @@ class AppMarkCard extends StatefulWidget {
 class _AppMarkCardState extends State<AppMarkCard>
     with SingleTickerProviderStateMixin {
   late final AnimationController _glow = AnimationController(
-      vsync: this, duration: const Duration(milliseconds: 3400),);
+    vsync: this,
+    duration: const Duration(milliseconds: 3400),
+  );
   bool _started = false;
 
   @override

@@ -3,10 +3,11 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:halal_map_polskie/core/maps/maps_launcher.dart';
+import 'package:go_router/go_router.dart';
 import 'package:halal_map_polskie/core/places/domain/category.dart';
 import 'package:halal_map_polskie/core/places/domain/place.dart';
 import 'package:halal_map_polskie/core/places/presentation/category_style.dart';
+import 'package:halal_map_polskie/core/routing/app_router.dart';
 import 'package:halal_map_polskie/core/theme/tokens.dart';
 import 'package:halal_map_polskie/l10n/generated/app_localizations.dart';
 import 'package:halal_map_polskie/shared/widgets/fade_rise_in.dart';
@@ -65,7 +66,7 @@ class _SearchViewState extends ConsumerState<SearchView>
 
   void _openPlace(Place place) {
     ref.read(recentSearchesProvider.notifier).add(_controller.text);
-    ref.read(mapsLauncherProvider).openPlace(place);
+    context.push(placeDetailLocation(place.id));
     _close();
   }
 
