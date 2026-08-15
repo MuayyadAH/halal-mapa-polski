@@ -1,7 +1,9 @@
 name: halal_map_polskie
 description: Modern, community-built halal discovery map for Muslims in Poland.
 publish_to: 'none'
-version: 0.1.0+1
+# Build number must stay above the stores' last upload (iOS build 3 as of
+# 2026-08; verify Play's App bundle explorer before the first Play upload).
+version: 0.2.0+4
 
 environment:
   sdk: '>=3.5.0 <4.0.0'

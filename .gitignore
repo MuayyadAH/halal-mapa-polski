@@ -49,3 +49,8 @@ dart_define.local.json
 # OS
 .DS_Store
 Thumbs.db
+
+# Android release signing (upload keystore + credentials). Never commit.
+android/key.properties
+*.jks
+*.keystore

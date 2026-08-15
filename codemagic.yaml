@@ -57,8 +57,59 @@ workflows:
         script: flutter test
 
   # ---------------------------------------------------------------------------
+  # iOS signed build → TestFlight (App Store Connect).
+  # Manual start only (no triggering block) so uploads are deliberate.
+  #
+  # ONE-TIME SETUP in the Codemagic UI (needs ASC Admin/App Manager):
+  #   1. App Store Connect → Users and Access → Integrations →
+  #      App Store Connect API → Team Keys → generate a key with the
+  #      App Manager role. Download the .p8 (single download!), note the
+  #      Key ID and Issuer ID.
+  #   2. Codemagic → Teams → Personal Account → Integrations →
+  #      Developer Portal → add the key, name it exactly:  halalmap-asc-key
+  #   3. Codemagic then creates/fetches the distribution certificate and
+  #      App Store provisioning profile for the bundle id automatically.
+  # ---------------------------------------------------------------------------
+  ios-testflight:
+    <<: *instance
+    name: iOS (TestFlight)
+    integrations:
+      app_store_connect: halalmap-asc-key
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: pl.kolektywmuzulmanow.halalmapapolski
+      groups:
+        - halalmap_secrets       # provides MAP_TILES_KEY
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+    scripts:
+      - name: Get packages
+        script: flutter pub get
+      - name: Generate localizations
+        script: flutter gen-l10n
+      - name: Install CocoaPods dependencies
+        script: find . -name "Podfile" -execdir pod install \;
+      - name: Apply signing settings to the Xcode project
+        script: xcode-project use-profiles
+      - name: Build signed .ipa
+        script: |
+          flutter build ipa --release \
+            --dart-define=MAP_TILES_KEY=$MAP_TILES_KEY \
+            --export-options-plist=/Users/builder/export_options.plist
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
+
+  # ---------------------------------------------------------------------------
   # iOS unsigned build → downloadable .ipa for Sideloadly/AltStore.
-  # No Apple account, no code signing, no publishing.
+  # Legacy path from before the paid Apple team; kept for quick personal
+  # sideloads. No Apple account, no code signing, no publishing.
   # ---------------------------------------------------------------------------
   ios-unsigned:
     <<: *instance

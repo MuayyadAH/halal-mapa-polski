@@ -32,7 +32,7 @@ flutter run --dart-define=DEBUG_LOCALE=en    # English
 
 ```powershell
 # 1. Wipe app data on the emulator to clear secure_storage
-adb shell pm clear pl.halalmap.app
+adb shell pm clear pl.kolektywmuzulmanow.halalmapapolski
 
 # 2. Launch
 flutter run
@@ -46,7 +46,7 @@ After completing onboarding once, simply re-launch (kill + restart):
 
 ```powershell
 # In emulator: long-press app → close, or use adb
-adb shell am force-stop pl.halalmap.app
+adb shell am force-stop pl.kolektywmuzulmanow.halalmapapolski
 flutter run
 ```
 
@@ -61,7 +61,7 @@ adb shell settings put global transition_animation_scale 0
 adb shell settings put global window_animation_scale 0
 
 # Restart the app
-adb shell am force-stop pl.halalmap.app
+adb shell am force-stop pl.kolektywmuzulmanow.halalmapapolski
 flutter run
 ```
 
@@ -78,11 +78,11 @@ adb shell settings put global window_animation_scale 1
 
 ```powershell
 # Reset location permission to "never asked"
-adb shell pm reset-permissions pl.halalmap.app
+adb shell pm reset-permissions pl.kolektywmuzulmanow.halalmapapolski
 
 # OR specifically grant/deny
-adb shell pm grant pl.halalmap.app android.permission.ACCESS_COARSE_LOCATION
-adb shell pm revoke pl.halalmap.app android.permission.ACCESS_COARSE_LOCATION
+adb shell pm grant pl.kolektywmuzulmanow.halalmapapolski android.permission.ACCESS_COARSE_LOCATION
+adb shell pm revoke pl.kolektywmuzulmanow.halalmapapolski android.permission.ACCESS_COARSE_LOCATION
 ```
 
 After resetting permissions and completing Onboard 3 via "Kontynuuj" → the LocationPermission screen should appear. After granting (or denying), subsequent "Kontynuuj" paths skip the pre-prompt and go straight to Map.
