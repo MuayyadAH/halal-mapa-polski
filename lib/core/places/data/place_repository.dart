@@ -58,10 +58,9 @@ class GoogleSheetPlaceRepository implements PlaceRepository {
 @visibleForTesting
 List<Place> parsePlacesCsv(String csv) {
   if (csv.trim().isEmpty) return const [];
-  final rows = const CsvToListConverter(
-    eol: '\n',
-    shouldParseNumbers: false,
-  ).convert(csv);
+  // Delimiter pinned: the sheet export is always comma-separated, so v8's
+  // content-based auto-detection is disabled to keep parsing deterministic.
+  final rows = Csv(autoDetect: false).decode(csv);
   if (rows.isEmpty) return const [];
 
   final header = rows.first.map((c) => c.toString().trim()).toList();

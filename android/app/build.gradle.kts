@@ -6,7 +6,10 @@ plugins {
 
 android {
     namespace = "pl.halalmap.app"
-    compileSdk = flutter.compileSdkVersion
+    // flutter_secure_storage 11 and permission_handler 13 compile against API 37;
+    // Flutter 3.44's default is still 36. Drop back to flutter.compileSdkVersion
+    // once the SDK default catches up.
+    compileSdk = maxOf(flutter.compileSdkVersion, 37)
     ndkVersion = flutter.ndkVersion
 
     compileOptions {

@@ -41,7 +41,7 @@ flutter run              # debug on a connected device / emulator
 
 The app runs without a MapTiler key — the map falls back gracefully — but the custom basemap renders fully only when a key is supplied (see below).
 
-> Rebuilding platform folders from scratch is only needed if `android/`/`ios/` are ever deleted. In that case run `flutter create . --project-name halal_map_polskie --org pl.halalmap --platforms=android,ios --no-pub`, then re-apply the permission/app-id/SDK-floor edits (location, camera, photos, notifications; `applicationId pl.halalmap.app`, `minSdkVersion 23`, `targetSdkVersion 34`; iOS `Info.plist` usage strings + `CFBundleLocalizations` pl/en/ar; `platform :ios, '13.0'`).
+> Rebuilding platform folders from scratch is only needed if `android/`/`ios/` are ever deleted. In that case run `flutter create . --project-name halal_map_polskie --org pl.halalmap --platforms=android,ios --no-pub`, then re-apply the permission/app-id/SDK edits (location, camera, photos, notifications; `applicationId pl.halalmap.app`; `minSdk`/`targetSdk` follow Flutter's defaults, but `compileSdk` is pinned to `maxOf(flutter.compileSdkVersion, 37)` — required by `flutter_secure_storage` 11 and `permission_handler` 13; iOS `Info.plist` usage strings + `CFBundleLocalizations` pl/en/ar; `platform :ios, '13.0'`).
 
 ## Environment variables (`--dart-define`)
 
