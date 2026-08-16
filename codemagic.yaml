@@ -57,30 +57,38 @@ workflows:
         script: flutter test
 
   # ---------------------------------------------------------------------------
-  # iOS signed build → TestFlight (App Store Connect).
+  # iOS signed build → TestFlight, WITHOUT an App Store Connect API key.
+  # Uses manual code signing + Apple ID with an app-specific password
+  # (fastlane can only *upload the binary* in this mode — tester
+  # distribution and metadata are then managed in the ASC web UI).
   # Manual start only (no triggering block) so uploads are deliberate.
   #
-  # ONE-TIME SETUP in the Codemagic UI (needs ASC Admin/App Manager):
-  #   1. App Store Connect → Users and Access → Integrations →
-  #      App Store Connect API → Team Keys → generate a key with the
-  #      App Manager role. Download the .p8 (single download!), note the
-  #      Key ID and Issuer ID.
-  #   2. Codemagic → Teams → Personal Account → Integrations →
-  #      Developer Portal → add the key, name it exactly:  halalmap-asc-key
-  #   3. Codemagic then creates/fetches the distribution certificate and
-  #      App Store provisioning profile for the bundle id automatically.
+  # ONE-TIME SETUP in the Codemagic UI:
+  #   1. Code signing identities → upload:
+  #        - Apple Distribution certificate (.p12), reference name:
+  #            halalmap_distribution
+  #        - App Store provisioning profile for
+  #          pl.kolektywmuzulmanow.halalmapapolski, reference name:
+  #            halalmap_appstore
+  #   2. Environment variables → group `halalmap_appleid` (all "Secure"):
+  #        APPLE_ID_EMAIL        = the Apple ID that has ASC access
+  #        APP_SPECIFIC_PASSWORD = app-specific password from
+  #                                account.apple.com → Sign-In and Security
+  #        APP_APPLE_ID          = the app's numeric Apple ID from
+  #                                ASC → App Information → General
   # ---------------------------------------------------------------------------
   ios-testflight:
     <<: *instance
     name: iOS (TestFlight)
-    integrations:
-      app_store_connect: halalmap-asc-key
     environment:
       ios_signing:
-        distribution_type: app_store
-        bundle_identifier: pl.kolektywmuzulmanow.halalmapapolski
+        certificates:
+          - halalmap_distribution
+        provisioning_profiles:
+          - halalmap_appstore
       groups:
         - halalmap_secrets       # provides MAP_TILES_KEY
+        - halalmap_appleid       # APPLE_ID_EMAIL, APP_SPECIFIC_PASSWORD, APP_APPLE_ID
       flutter: stable
       xcode: latest
       cocoapods: default
@@ -98,13 +106,17 @@ workflows:
           flutter build ipa --release \
             --dart-define=MAP_TILES_KEY=$MAP_TILES_KEY \
             --export-options-plist=/Users/builder/export_options.plist
+      - name: Upload to TestFlight (Apple ID + app-specific password)
+        script: |
+          export FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD="$APP_SPECIFIC_PASSWORD"
+          fastlane pilot upload \
+            --username "$APPLE_ID_EMAIL" \
+            --apple_id "$APP_APPLE_ID" \
+            --ipa build/ios/ipa/*.ipa \
+            --skip_waiting_for_build_processing true
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
-    publishing:
-      app_store_connect:
-        auth: integration
-        submit_to_testflight: true
 
   # ---------------------------------------------------------------------------
   # iOS unsigned build → downloadable .ipa for Sideloadly/AltStore.
