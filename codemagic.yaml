@@ -45,24 +45,20 @@ workflows:
         script: flutter test
 
   # ---------------------------------------------------------------------------
-  # iOS signed build → TestFlight, script-based signing with the ASC API key.
-  # The ios_signing/integration automatic flow failed persistently with
-  # "No matching profiles found" (codemagic-ci-cd discussion #2280 — the
-  # maintainer's fix is this script flow). All signing happens in visible
-  # script steps: fetch-signing-files matches/creates the distribution
-  # certificate from CERTIFICATE_PRIVATE_KEY and the App Store profile, and
-  # publishing authenticates with the same key from env vars. No Codemagic
-  # integration or code-signing-identities storage involved.
+  # iOS signed build → TestFlight, via the App Store Connect API key.
+  # Automatic code signing + built-in TestFlight publishing.
   # Manual start only (no triggering block) so uploads are deliberate.
   #
-  # ONE-TIME SETUP in the Codemagic UI — app settings → Environment variables,
-  # group `appstore_credentials`, all four marked Secure:
-  #   APP_STORE_CONNECT_ISSUER_ID     = the team's issuer id (UUID)
-  #   APP_STORE_CONNECT_KEY_IDENTIFIER= the team key id (AuthKey_<ID>.p8)
-  #   APP_STORE_CONNECT_PRIVATE_KEY   = full contents of the AuthKey .p8 file
-  #   CERTIFICATE_PRIVATE_KEY         = full contents of the RSA key used for
-  #                                     the distribution cert (halalmap-signing/
-  #                                     ios_distribution.key on the dev PC)
+  # ONE-TIME SETUP in the Codemagic UI:
+  #   1. Integrations → Developer Portal (App Store Connect) → add key,
+  #      reference name: halalmap-asc-key (Issuer ID + Key ID + .p8).
+  #   2. Code signing identities → iOS certificates → GENERATE CERTIFICATE
+  #      (via the halalmap-asc-key integration, type: iOS Distribution).
+  #      Required: automatic signing only uses certificates whose private key
+  #      Codemagic holds. The team's pre-existing cert is the previous
+  #      developer's Expo-created one (no key available), so without a
+  #      Codemagic-held certificate the build fails with
+  #      "No matching profiles found".
   #
   # AFTER THE FIRST UPLOAD: in ASC → TestFlight, add yourself/testers to an
   # Internal Testing group (instant, no review) and install via the TestFlight
@@ -72,10 +68,14 @@ workflows:
   ios-testflight:
     <<: *instance
     name: iOS (TestFlight)
+    integrations:
+      app_store_connect: halalmap-asc-key
     environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: pl.kolektywmuzulmanow.halalmapapolski
       groups:
         - halalmap_secrets       # provides MAP_TILES_KEY
-        - appstore_credentials   # ASC API key + certificate private key
       flutter: stable
       xcode: latest
       cocoapods: default
@@ -86,15 +86,6 @@ workflows:
         script: flutter gen-l10n
       - name: Install CocoaPods dependencies
         script: find . -name "Podfile" -execdir pod install \;
-      - name: Initialize keychain
-        script: keychain initialize
-      - name: Fetch signing files (certificate + App Store profile)
-        script: |
-          app-store-connect fetch-signing-files "pl.kolektywmuzulmanow.halalmapapolski" \
-            --type IOS_APP_STORE \
-            --create
-      - name: Add certificates to keychain
-        script: keychain add-certificates
       - name: Apply signing settings to the Xcode project
         script: xcode-project use-profiles
       - name: Build signed .ipa
@@ -104,9 +95,7 @@ workflows:
             --export-options-plist=/Users/builder/export_options.plist
     publishing:
       app_store_connect:
-        api_key: $APP_STORE_CONNECT_PRIVATE_KEY
-        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
-        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
+        auth: integration
         submit_to_testflight: true
         # beta_groups:           # uncomment to auto-distribute to a group
         #   - Internal Testers
