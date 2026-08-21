@@ -59,8 +59,12 @@ workflows:
       app_store_connect: halalmap-asc-key
     environment:
       ios_signing:
-        distribution_type: app_store
-        bundle_identifier: pl.kolektywmuzulmanow.halalmapapolski
+        # Explicit references to Code signing identities entries (the
+        # fetch-it-automatically style failed persistently for this account).
+        certificates:
+          - Halal Mapa iOS signing
+        provisioning_profiles:
+          - halalmap_appstore
       groups:
         - halalmap_secrets       # provides MAP_TILES_KEY
       flutter: stable
