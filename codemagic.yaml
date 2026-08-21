@@ -45,21 +45,22 @@ workflows:
         script: flutter test
 
   # ---------------------------------------------------------------------------
-  # iOS signed build → TestFlight, via the App Store Connect API key.
-  # Automatic code signing: Codemagic uses the ASC key to fetch/create the
-  # distribution certificate and App Store provisioning profile — no manual
-  # .p12 / profile uploads, no app-specific password.
+  # iOS signed build → TestFlight.
+  # Signing: MANUAL references to a certificate + profile created via the ASC
+  # API (Codemagic's automatic signing cannot use the previous developer's
+  # Expo-created certificate — no private key — and won't create a fresh one
+  # next to it, so we pre-created our own; see halalmap-signing/ locally).
+  # Publishing: the ASC API key integration uploads to TestFlight.
   # Manual start only (no triggering block) so uploads are deliberate.
   #
   # ONE-TIME SETUP in the Codemagic UI:
-  #   1. Team/account settings → Integrations → Developer Portal
-  #      (App Store Connect) → add key, reference name: halalmap-asc-key
-  #        - Issuer ID : ASC → Users and Access → Integrations (top of page)
-  #        - Key ID    : from the key filename AuthKey_<KEYID>.p8
-  #        - .p8 file  : upload it
-  #      The key needs the App Manager role to create signing assets.
-  #   2. The app record for pl.kolektywmuzulmanow.halalmapapolski must exist
-  #      in App Store Connect (My Apps → + → New App).
+  #   1. Integrations → Developer Portal (App Store Connect) → add key,
+  #      reference name: halalmap-asc-key (Issuer ID + Key ID + .p8).
+  #   2. Code signing identities → iOS:
+  #        - certificate  halalmap_distribution.p12  → reference name:
+  #            halalmap_distribution   (password: p12-password.txt beside it)
+  #        - profile      halalmap_appstore.mobileprovision → reference name:
+  #            halalmap_appstore
   #
   # AFTER THE FIRST UPLOAD: in ASC → TestFlight, add yourself/testers to an
   # Internal Testing group (instant, no review) and install via the TestFlight
@@ -73,8 +74,10 @@ workflows:
       app_store_connect: halalmap-asc-key
     environment:
       ios_signing:
-        distribution_type: app_store
-        bundle_identifier: pl.kolektywmuzulmanow.halalmapapolski
+        certificates:
+          - halalmap_distribution
+        provisioning_profiles:
+          - halalmap_appstore
       groups:
         - halalmap_secrets       # provides MAP_TILES_KEY
       flutter: stable
