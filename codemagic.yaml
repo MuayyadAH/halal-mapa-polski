@@ -45,22 +45,20 @@ workflows:
         script: flutter test
 
   # ---------------------------------------------------------------------------
-  # iOS signed build → TestFlight.
-  # Signing: MANUAL references to a certificate + profile created via the ASC
-  # API (Codemagic's automatic signing cannot use the previous developer's
-  # Expo-created certificate — no private key — and won't create a fresh one
-  # next to it, so we pre-created our own; see halalmap-signing/ locally).
-  # Publishing: the ASC API key integration uploads to TestFlight.
+  # iOS signed build → TestFlight, via the App Store Connect API key.
+  # Automatic code signing + built-in TestFlight publishing.
   # Manual start only (no triggering block) so uploads are deliberate.
   #
   # ONE-TIME SETUP in the Codemagic UI:
   #   1. Integrations → Developer Portal (App Store Connect) → add key,
   #      reference name: halalmap-asc-key (Issuer ID + Key ID + .p8).
-  #   2. Code signing identities → iOS:
-  #        - certificate  halalmap_distribution.p12  → reference name:
-  #            halalmap_distribution   (password: p12-password.txt beside it)
-  #        - profile      halalmap_appstore.mobileprovision → reference name:
-  #            halalmap_appstore
+  #   2. Code signing identities → iOS certificates → GENERATE CERTIFICATE
+  #      (via the halalmap-asc-key integration, type: iOS Distribution).
+  #      Required: automatic signing only uses certificates whose private key
+  #      Codemagic holds. The team's pre-existing cert is the previous
+  #      developer's Expo-created one (no key available), so without a
+  #      Codemagic-held certificate the build fails with
+  #      "No matching profiles found".
   #
   # AFTER THE FIRST UPLOAD: in ASC → TestFlight, add yourself/testers to an
   # Internal Testing group (instant, no review) and install via the TestFlight
@@ -74,10 +72,8 @@ workflows:
       app_store_connect: halalmap-asc-key
     environment:
       ios_signing:
-        certificates:
-          - halalmap_distribution
-        provisioning_profiles:
-          - halalmap_appstore
+        distribution_type: app_store
+        bundle_identifier: pl.kolektywmuzulmanow.halalmapapolski
       groups:
         - halalmap_secrets       # provides MAP_TILES_KEY
       flutter: stable
