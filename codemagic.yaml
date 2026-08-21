@@ -1,30 +1,18 @@
-# Codemagic CI/CD — Halal Map Polskie (Flutter, iOS)
+# Codemagic CI/CD — Halal Map Polskie (Flutter, iOS + Android)
 # Docs: https://docs.codemagic.io/yaml-quick-start/building-a-flutter-app/
 #
-# GOAL: build an iOS app from Windows (no Mac) WITHOUT a paid Apple Developer
-# account. Codemagic produces an *unsigned* .ipa artifact; you then install it
-# on your iPhone from your PC with Sideloadly (or AltStore), which re-signs it
-# with your FREE Apple ID over USB.
+# Workflows:
+#   - test             : analyze + unit/widget tests on PRs
+#   - ios-testflight   : signed iOS build → TestFlight (ASC API key integration)
+#   - ios-unsigned     : legacy unsigned .ipa for Sideloadly (pre-paid-team path)
+#   - android-internal : signed .aab → Google Play internal testing track
 #
-#   Why unsigned? Codemagic's automatic signing needs an App Store Connect API
-#   key, which only paid Developer Program members can create. Free "Personal
-#   Team" signing only works interactively in Xcode on a Mac. So we sign on the
-#   PC side instead.
-#
-# ONE-TIME SETUP in the Codemagic UI:
+# SHARED ONE-TIME SETUP in the Codemagic UI:
 #   1. Connect this repo (git@github.com:MuayyadAH/halal-mapa-polskie.git).
 #   2. Environment variables → group `halalmap_secrets`:
 #        MAP_TILES_KEY = <your MapTiler key>   (mark "Secure")
 #      (Optional, only when you have real values: SUGGEST_FORM_URL, WEBSITE_URL,
 #       PRIVACY_URL, TERMS_URL — they have placeholder defaults otherwise.)
-#
-# AFTER THE BUILD (on your Windows PC):
-#   - Download `Runner-unsigned.ipa` from the Codemagic build artifacts.
-#   - Install Sideloadly (https://sideloadly.io), plug in your iPhone via USB,
-#     drop in the .ipa, sign in with your free Apple ID, and click Start.
-#   - Free-account limits: ~7-day validity (re-sideload to refresh), up to 3
-#     apps, and you must trust the developer profile under
-#     Settings → General → VPN & Device Management on first launch.
 
 definitions:
   instance: &instance
@@ -57,38 +45,38 @@ workflows:
         script: flutter test
 
   # ---------------------------------------------------------------------------
-  # iOS signed build → TestFlight, WITHOUT an App Store Connect API key.
-  # Uses manual code signing + Apple ID with an app-specific password
-  # (fastlane can only *upload the binary* in this mode — tester
-  # distribution and metadata are then managed in the ASC web UI).
+  # iOS signed build → TestFlight, via the App Store Connect API key.
+  # Automatic code signing: Codemagic uses the ASC key to fetch/create the
+  # distribution certificate and App Store provisioning profile — no manual
+  # .p12 / profile uploads, no app-specific password.
   # Manual start only (no triggering block) so uploads are deliberate.
   #
   # ONE-TIME SETUP in the Codemagic UI:
-  #   1. Code signing identities → upload:
-  #        - Apple Distribution certificate (.p12), reference name:
-  #            halalmap_distribution
-  #        - App Store provisioning profile for
-  #          pl.kolektywmuzulmanow.halalmapapolski, reference name:
-  #            halalmap_appstore
-  #   2. Environment variables → group `halalmap_appleid` (all "Secure"):
-  #        APPLE_ID_EMAIL        = the Apple ID that has ASC access
-  #        APP_SPECIFIC_PASSWORD = app-specific password from
-  #                                account.apple.com → Sign-In and Security
-  #        APP_APPLE_ID          = the app's numeric Apple ID from
-  #                                ASC → App Information → General
+  #   1. Team/account settings → Integrations → Developer Portal
+  #      (App Store Connect) → add key, reference name: halalmap-asc-key
+  #        - Issuer ID : ASC → Users and Access → Integrations (top of page)
+  #        - Key ID    : from the key filename AuthKey_<KEYID>.p8
+  #        - .p8 file  : upload it
+  #      The key needs the App Manager role to create signing assets.
+  #   2. The app record for pl.kolektywmuzulmanow.halalmapapolski must exist
+  #      in App Store Connect (My Apps → + → New App).
+  #
+  # AFTER THE FIRST UPLOAD: in ASC → TestFlight, add yourself/testers to an
+  # Internal Testing group (instant, no review) and install via the TestFlight
+  # app on the iPhone. Each new upload needs a higher build number (bump the
+  # +N in pubspec.yaml `version:`).
   # ---------------------------------------------------------------------------
   ios-testflight:
     <<: *instance
     name: iOS (TestFlight)
+    integrations:
+      app_store_connect: halalmap-asc-key
     environment:
       ios_signing:
-        certificates:
-          - halalmap_distribution
-        provisioning_profiles:
-          - halalmap_appstore
+        distribution_type: app_store
+        bundle_identifier: pl.kolektywmuzulmanow.halalmapapolski
       groups:
         - halalmap_secrets       # provides MAP_TILES_KEY
-        - halalmap_appleid       # APPLE_ID_EMAIL, APP_SPECIFIC_PASSWORD, APP_APPLE_ID
       flutter: stable
       xcode: latest
       cocoapods: default
@@ -106,14 +94,12 @@ workflows:
           flutter build ipa --release \
             --dart-define=MAP_TILES_KEY=$MAP_TILES_KEY \
             --export-options-plist=/Users/builder/export_options.plist
-      - name: Upload to TestFlight (Apple ID + app-specific password)
-        script: |
-          export FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD="$APP_SPECIFIC_PASSWORD"
-          fastlane pilot upload \
-            --username "$APPLE_ID_EMAIL" \
-            --apple_id "$APP_APPLE_ID" \
-            --ipa build/ios/ipa/*.ipa \
-            --skip_waiting_for_build_processing true
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
+        # beta_groups:           # uncomment to auto-distribute to a group
+        #   - Internal Testers
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
@@ -160,3 +146,69 @@ workflows:
     artifacts:
       - Runner-unsigned.ipa
       - /tmp/xcodebuild_logs/*.log
+
+  # ---------------------------------------------------------------------------
+  # Android signed .aab → Google Play internal testing track.
+  # Manual start only (no triggering block) so uploads are deliberate.
+  #
+  # ONE-TIME SETUP:
+  #   1. Codemagic UI → Code signing identities → Android keystores → upload
+  #      the upload keystore, reference name: halalmap_upload_keystore
+  #      (BLOCKED until the keystore arrives from the devs — the Play listing
+  #      already exists, so we must sign with ITS registered upload key.)
+  #   2. Google Play service account for API publishing:
+  #        - Google Cloud console → create a service account + JSON key
+  #        - Play Console → Users and permissions → invite the service
+  #          account email with "Release to testing tracks" permission
+  #        - Codemagic UI → Environment variables → group `halalmap_google_play`:
+  #            GCLOUD_SERVICE_ACCOUNT_CREDENTIALS = <paste JSON>  (mark "Secure")
+  #      (The app already has an upload — v0.1.0 by the previous devs — so
+  #       API publishing works immediately; no manual first upload needed.)
+  #
+  # Each Play upload needs a higher versionCode (bump the +N in pubspec.yaml;
+  # Play's highest is 2, current pubspec 0.2.0+4 clears it).
+  #
+  # INTERIM (no keystore yet): Play Console → Internal app sharing accepts ANY
+  # signature, including the debug-key fallback — usable for device testing
+  # today without the upload keystore.
+  # ---------------------------------------------------------------------------
+  android-internal:
+    name: Android (Play internal testing)
+    instance_type: linux_x2
+    max_build_duration: 60
+    environment:
+      android_signing:
+        - halalmap_upload_keystore
+      groups:
+        - halalmap_secrets       # provides MAP_TILES_KEY
+        - halalmap_google_play   # GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
+      flutter: stable
+    scripts:
+      - name: Get packages
+        script: flutter pub get
+      - name: Generate localizations
+        script: flutter gen-l10n
+      - name: Write android/key.properties from the Codemagic keystore
+        # android/app/build.gradle.kts reads key.properties; Codemagic exposes
+        # the uploaded keystore via CM_KEYSTORE_* environment variables.
+        script: |
+          cat > android/key.properties <<EOF
+          storeFile=$CM_KEYSTORE_PATH
+          storePassword=$CM_KEYSTORE_PASSWORD
+          keyAlias=$CM_KEY_ALIAS
+          keyPassword=$CM_KEY_PASSWORD
+          EOF
+      - name: Build signed .aab
+        script: |
+          flutter build appbundle --release \
+            --dart-define=MAP_TILES_KEY=$MAP_TILES_KEY
+    publishing:
+      google_play:
+        credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
+        track: internal
+        # Draft = review and roll out in Play Console yourself; set to false
+        # to release straight to the internal-tester list.
+        submit_as_draft: true
+    artifacts:
+      - build/**/outputs/**/*.aab
+      - build/**/outputs/**/mapping.txt

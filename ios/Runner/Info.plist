@@ -87,6 +87,10 @@
 			<key>NSAllowsArbitraryLoads</key>
 			<false/>
 		</dict>
+		<!-- Standard HTTPS only (exempt) — lets TestFlight builds skip the
+		     per-upload export-compliance question -->
+		<key>ITSAppUsesNonExemptEncryption</key>
+		<false/>
 		<key>UIStatusBarHidden</key>
 		<false/>
 	</dict>
